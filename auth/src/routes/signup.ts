@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { BadRequestError } from '../errors/bad-request-error';
 import { RequestValidationError } from '../errors/request-validation-error';
 import { User } from '../models/user';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -34,6 +35,20 @@ router.post(
 
     const user = User.build({ email, password });
     await user.save();
+
+    // generate jwt (signing key shared with other services, which is stored securely)
+    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+
+      // check for env var is alr done at startup
+      process.env.JWT_KEY!
+    );
+
+    // store to session cookie
+    req.session = { jwt: userJwt };
 
     res.status(201).send(user);
   }
