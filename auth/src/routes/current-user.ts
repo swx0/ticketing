@@ -1,5 +1,6 @@
 import express from 'express';
-import { currentUser } from '../middlewares/current-user';
+import { currentUser } from '@ticx/common';
+
 const router = express.Router();
 
 // middleware currentUser is used
