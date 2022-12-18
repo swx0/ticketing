@@ -12,7 +12,7 @@ interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
 }
 
-// interface for the properties of User Document (from printing User)
+// interface for the properties of User Document (contains extra attributes added by mongoose)
 interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema(
   {
     // take user document and convert to a customised json
     // Modifying ret directly will modify json
+    // this is the returned object when User.build() is returned
     toJSON: {
       transform(doc, ret) {
         delete ret.password;
