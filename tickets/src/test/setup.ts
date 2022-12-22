@@ -8,6 +8,9 @@ declare global {
   var signup: () => string[];
 }
 
+// make use of mock file instead
+jest.mock('../nats-wrapper');
+
 let mongo: any;
 
 beforeAll(async () => {
@@ -21,6 +24,7 @@ beforeAll(async () => {
 
 // Empty db before each test
 beforeEach(async () => {
+  jest.clearAllMocks();
   const collections = await mongoose.connection.db.collections();
 
   for (let collection of collections) {
