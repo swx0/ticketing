@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // interface for the properties of a Ticket
 interface TicketAttrs {
@@ -17,6 +18,8 @@ interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+  version: number;
+  orderId?: string;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -33,6 +36,9 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    orderId: {
+      type: String,
+    },
   },
   {
     // take user document and convert to a customised json
@@ -46,6 +52,9 @@ const ticketSchema = new mongoose.Schema(
     },
   }
 );
+
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 // instead of creating a new user from new Ticket(),
 // will use this fn for type checking

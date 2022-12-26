@@ -1,4 +1,5 @@
 import {
+  BadRequestError,
   NotAuthorisedError,
   NotFoundError,
   requireAuth,
@@ -28,6 +29,11 @@ router.put(
       throw new NotFoundError();
     }
 
+    // if ticket is attached to order, reject updates
+    if (ticket.orderId) {
+      throw new BadRequestError('Ticket is reserved');
+    }
+
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorisedError();
     }
@@ -38,6 +44,7 @@ router.put(
     // emit update event upon saving to db
     new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
+      version: ticket.version,
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,

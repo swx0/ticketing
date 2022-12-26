@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { OrderStatus } from '@ticx/common';
 import { TicketDoc } from './ticket';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 export { OrderStatus };
 
@@ -20,6 +21,7 @@ interface OrderModel extends mongoose.Model<OrderDoc> {
 // interface for the properties of User Document (contains extra attributes added by mongoose)
 interface OrderDoc extends mongoose.Document {
   userId: string;
+  version: number;
   status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
@@ -59,6 +61,9 @@ const orderSchema = new mongoose.Schema(
     },
   }
 );
+
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 
 // instead of creating a new user from new User(),
 // will use this fn for type checking

@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 import { Order, OrderStatus } from './order';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // This is a stripped down version of Ticket model compared to the model in tickets service
 
 // interface for the properties of a Ticket
 interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
 }
@@ -12,12 +14,17 @@ interface TicketAttrs {
 // interface for the properties of a Ticket Model
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketDoc | null>;
 }
 
 // interface for the properties of Ticket Document (contains extra attributes)
 export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
+  version: number;
   isReserved(): Promise<boolean>;
 }
 
@@ -46,11 +53,24 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
 // ticketSchema.statics used to add functions to ticket model itself
 // instead of creating a new user from new Ticket(),
 // will use this fn for type checking
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id,
+    title: attrs.title,
+    price: attrs.price,
+  });
+};
+
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  // find using id and version number
+  // will only update if ticket event received's version number is 1 more than version number in db
+  return Ticket.findOne({ _id: event.id, version: event.version - 1 });
 };
 
 // ticketSchema.methods add function to ticket document

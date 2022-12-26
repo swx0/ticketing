@@ -27,6 +27,7 @@ router.post(
     // use attr from ticket saved to db, as opposed to the attr from req.body
     await new TicketCreatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
+      version: ticket.version,
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
