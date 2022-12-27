@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { app } from './app';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
+
 import { natsWrapper } from './nats-wrapper';
-import { TicketCreatedListener } from './listeners/ticket-created-listener';
-import { TicketUpdatedListener } from './listeners/ticket-updated-listener';
-import { ExpirationCompleteListener } from './listeners/expiration-complete-listener';
 
 const start = async () => {
   // check environment var is found at startup
@@ -39,9 +39,8 @@ const start = async () => {
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
 
-    new TicketCreatedListener(natsWrapper.client).listen();
-    new TicketUpdatedListener(natsWrapper.client).listen();
-    new ExpirationCompleteListener(natsWrapper.client).listen();
+    new OrderCreatedListener(natsWrapper.client).listen();
+    new OrderCancelledListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log('connected to mongodb');
