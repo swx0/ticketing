@@ -5,10 +5,13 @@ import Header from '../components/header';
 // This file is for global css that needs to appear in every page
 // will always load up for users to this app
 const AppComponent = ({ Component, pageProps, currentUser }) => {
+  // ensure child Components will receive currentUser data too
   return (
     <div>
       <Header currentUser={currentUser} />
-      <Component {...pageProps} />
+      <div className="container">
+        <Component currentUser={currentUser} {...pageProps} />
+      </div>
     </div>
   );
 };
@@ -21,7 +24,11 @@ AppComponent.getInitialProps = async (appContext) => {
   let pageProps = {};
   // For the case where getInitialProps defined
   if (appContext.Component.getInitialProps) {
-    pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+    pageProps = await appContext.Component.getInitialProps(
+      appContext.ctx,
+      client,
+      data.currentUser
+    );
   }
 
   return { pageProps, currentUser: data.currentUser };
