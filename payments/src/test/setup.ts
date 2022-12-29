@@ -5,7 +5,7 @@ import { app } from '../app';
 import jwt from 'jsonwebtoken';
 
 declare global {
-  var signup: () => string[];
+  var signup: (id?: string) => string[];
 }
 
 // make use of mock file instead
@@ -41,11 +41,12 @@ afterAll(async () => {
 
 // global function returning a promise
 // performing fake auth for testing purposes
-global.signup = () => {
+// optional args to use specific id
+global.signup = (id?: string) => {
   // Build JWT payload { id, email }
   const payload = {
     // randomly generated id
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com',
   };
 

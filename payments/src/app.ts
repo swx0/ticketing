@@ -4,6 +4,7 @@ import { json } from 'body-parser';
 
 import { currentUser, errorHandler, NotFoundError } from '@ticx/common';
 import cookieSession from 'cookie-session';
+import { createChargeRouter } from './routes/new';
 
 const app = express();
 app.use(json());
@@ -22,6 +23,8 @@ app.use(
 
 // This line has to occur after cookieSession()
 app.use(currentUser);
+
+app.use(createChargeRouter);
 
 // express captures the error and sends to middleware
 app.all('*', async (req, res) => {
