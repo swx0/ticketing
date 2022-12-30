@@ -4,13 +4,14 @@ import { useState } from 'react';
 const useRequest = ({ url, method, body, onSuccess }) => {
   const [errors, setErrors] = useState(null);
 
-  const doRequest = async () => {
+  // props = {} means optional args that would be merged to request body
+  const doRequest = async (props = {}) => {
     try {
       // Reset errors for each request
       setErrors(null);
 
       // method could be get, post, patch
-      const response = await axios[method](url, body);
+      const response = await axios[method](url, { ...body, ...props }); // merging additional args from props to body
 
       if (onSuccess) {
         onSuccess(response.data);
