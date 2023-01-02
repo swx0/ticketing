@@ -9,6 +9,7 @@ it('fetches an order', async () => {
     id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20,
+    userId: new mongoose.Types.ObjectId().toHexString(),
   });
   await ticket.save();
 
@@ -37,6 +38,7 @@ it('returns error if user is not authorised to retreive other user order', async
     id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20,
+    userId: new mongoose.Types.ObjectId().toHexString(),
   });
   await ticket.save();
 
