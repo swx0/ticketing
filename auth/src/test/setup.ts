@@ -7,6 +7,9 @@ declare global {
   var signup: () => Promise<string[]>;
 }
 
+// make use of mock file instead
+jest.mock('../nats-wrapper');
+
 let mongo: any;
 
 beforeAll(async () => {
