@@ -4,6 +4,8 @@ import { BadRequestError } from '@ticx/common';
 import { User } from '../models/user';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '@ticx/common';
+import { AuthCreatedPublisher } from '../events/publishers/auth-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -44,6 +46,12 @@ router.post(
 
     // store to session cookie
     req.session = { jwt: userJwt };
+
+    // publish auth created event
+    new AuthCreatedPublisher(natsWrapper.client).publish({
+      id: user.id,
+      email: user.email,
+    });
 
     res.status(201).send(user);
   }

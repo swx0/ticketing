@@ -8,6 +8,7 @@ const buildTicket = async () => {
     id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20,
+    userId: new mongoose.Types.ObjectId().toHexString(),
   });
   await ticket.save();
 

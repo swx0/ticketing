@@ -56,3 +56,27 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: swx0/reviews
+      context: reviews
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: swx0/profiles
+      context: profiles
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: swx0/email
+      context: email
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
