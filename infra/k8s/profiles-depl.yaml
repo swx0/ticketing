@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: profiles-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: profiles
   template:
     metadata:
       labels:
-        app: auth
+        app: profiles
     spec:
       containers:
-        - name: auth
-          image: swx0/auth
+        - name: profiles
+          image: swx0/profiles
           env:
             - name: MONGO_URI
-              value: 'mongodb://auth-mongo-srv:27017/auth'
+              value: 'mongodb://profiles-mongo-srv:27017/profiles'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -35,12 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: profiles-srv
 spec:
   selector:
-    app: auth
+    app: profiles
   ports:
-    - name: auth
+    - name: profiles
       protocol: TCP
       port: 3000
       targetPort: 3000

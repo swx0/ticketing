@@ -44,6 +44,7 @@ router.put(
       revieweeId: review.revieweeId,
       rating: review.rating,
       content: review.content,
+      version: review.version,
     });
 
     res.send(review);

@@ -45,6 +45,13 @@ spec:
                 name: reviews-srv
                 port:
                   number: 3000
+          - path: /api/profiles/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: profiles-srv
+                port:
+                  number: 3000
           - path: /?(.*)
             pathType: Prefix
             backend:
