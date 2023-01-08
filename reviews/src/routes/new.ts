@@ -1,4 +1,9 @@
-import { NotFoundError, requireAuth, validateRequest } from '@ticx/common';
+import {
+  BadRequestError,
+  NotFoundError,
+  requireAuth,
+  validateRequest,
+} from '@ticx/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
@@ -35,7 +40,10 @@ router.post(
       throw new NotFoundError();
     }
 
-    console.log(order);
+    const isReviewed = await order.isReviewed();
+    if (isReviewed) {
+      throw new BadRequestError('Order is already reviewed');
+    }
 
     // Build the review and save to db
     const review = Review.build({

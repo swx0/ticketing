@@ -32,7 +32,7 @@ const LandingPage = ({ currentUser, tickets }) => {
       </table>
     </div>
   );
-  return currentUser ? <h1>You are signed in</h1> : <h1>Not signed in</h1>;
+  // return currentUser ? <h1>You are signed in</h1> : <h1>Not signed in</h1>;
 };
 
 // will be called while rendering app on server
