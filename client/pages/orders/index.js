@@ -1,14 +1,51 @@
+import { OrderStatus } from '@ticx/common';
+import Link from 'next/link';
+import Router from 'next/router';
+
 const OrderIndex = ({ orders }) => {
+  const orderList = orders.map((order) => {
+    return (
+      <tr key={order.id}>
+        <td>
+          <Link href={''} as={``} className="nav-link">
+            {order.ticket.title}
+          </Link>
+        </td>
+        <td className="text-uppercase">{order.status}</td>
+        <td>
+          <button
+            className="btn btn-primary"
+            onClick={() =>
+              Router.push(
+                {
+                  pathname: '/reviews/new',
+                  query: { orderId: order.id },
+                },
+                '/reviews/new'
+              )
+            }
+          >
+            New Review
+          </button>
+        </td>
+      </tr>
+    );
+  });
+
   return (
-    <ul>
-      {orders.map((order) => {
-        return (
-          <li key={order.id}>
-            {order.ticket.title}-{order.status}
-          </li>
-        );
-      })}
-    </ul>
+    <div>
+      <h1>Orders</h1>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>{orderList}</tbody>
+      </table>
+    </div>
   );
 };
 

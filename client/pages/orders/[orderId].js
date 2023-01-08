@@ -1,4 +1,4 @@
-import { Router } from 'next/router';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
 import useRequest from '../../hooks/use-request';

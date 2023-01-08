@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { OrderStatus } from '@ticx/common';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { Review } from './review';
 
 export { OrderStatus };
 
@@ -28,6 +29,7 @@ interface OrderDoc extends mongoose.Document {
   price: number;
   title: string;
   ticketUserId: string;
+  isReviewed(): Promise<boolean>;
 }
 
 const orderSchema = new mongoose.Schema(
@@ -83,6 +85,20 @@ orderSchema.statics.build = (attrs: OrderAttrs) => {
     title: attrs.title,
     ticketUserId: attrs.ticketUserId,
   });
+};
+
+// orderSchema.methods add function to order document
+// cannot use arrow function here
+orderSchema.methods.isReviewed = async function () {
+  // 'this' keyword refers to order document we just called 'isReviewed' on
+  const existingReview = await Review.findOne({
+    orderId: this.id,
+  });
+
+  if (!existingReview) {
+    return false;
+  }
+  return true;
 };
 
 const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema);
